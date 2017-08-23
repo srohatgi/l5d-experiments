@@ -1,0 +1,53 @@
+version: '2'
+services:
+  consul:
+    image: "consul:0.8.0"
+    ports:
+      - "8500:8500"
+
+  avanti:
+    image: 801351377084.dkr.ecr.us-west-1.amazonaws.com/avanti-container:r_master_df02ecbfed8d542e53834cf3ed059a1817299739
+    entrypoint: ["/home/avanti/bin/avanti-server"]
+    command: ["--port","8080","-v"]
+    ports:
+      - "8080:8080"
+
+  service:
+    image: buoyantio/helloworld
+    command: ["-addr=:7777", "-text=Hello"]
+    ports:
+      - "7777:7777"
+
+  linkerd-viz:
+    image: docker.io/buoyantio/linkerd-viz:0.1.4
+    command: ["consul"]
+    environment:
+      SCRAPE_INTERVAL: 5s
+    ports:
+      - "3000:3000"
+      - "9191:9191"
+    depends_on:
+      - linkerd
+
+  linkerd:
+    image: buoyantio/linkerd:1.1.3
+    command: ['/config.yaml']
+    links:
+      - consul
+    volumes:
+      - ./linkerd.yml:/config.yaml
+    ports:
+      - 9990:9990
+      - 4140:4140
+    depends_on:
+      - consul-registrator
+
+  consul-registrator:
+    image: gliderlabs/registrator:v7
+    command: ['consul://consul:8500']
+    links:
+      - consul
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock
+    depends_on:
+      - consul
