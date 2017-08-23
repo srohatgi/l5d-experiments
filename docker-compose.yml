@@ -21,7 +21,7 @@ services:
       - "7777:7777"
 
   linkerd-viz:
-    image: docker.io/buoyantio/linkerd-viz:0.1.4
+    image: docker.io/buoyantio/linkerd-viz:0.1.5
     command: ["consul"]
     environment:
       SCRAPE_INTERVAL: 5s
