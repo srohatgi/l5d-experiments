@@ -44,6 +44,18 @@ services:
     depends_on:
       - consul-registrator
 
+  namerd:
+    image: buoyantio/namerd:1.1.3
+    command: '/config/namerd.yml'
+    volumes:
+      - ./namerd.yml:/config/namerd.yml
+    ports:
+      - 4100:4100
+      - 4180:4180
+      - 9991:9991
+    depends_on:
+      - consul-registrator
+
   consul-registrator:
     image: gliderlabs/registrator:v7
     command: ['consul://consul:8500']

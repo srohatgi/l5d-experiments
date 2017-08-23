@@ -9,12 +9,14 @@ routers:
   service:
     responseClassifier:
       kind: io.l5d.http.retryableIdempotent5XX
+  interpreter:
+    kind: io.l5d.namerd.http
+    experimental: true
+    dst: /$/inet/namerd/4180
   identifier:
    kind: io.l5d.path
    segments: 1
    consume: false
-  dtab: |
-    /svc/avanti => /#/io.l5d.consul/dc1/avanti-container;
   servers:
   - port: 4140
     ip: 0.0.0.0
