@@ -12,9 +12,9 @@ routers:
   identifier:
    kind: io.l5d.path
    segments: 1
-   consume: true
+   consume: false
   dtab: |
-    /svc => /#/io.l5d.consul/dc1;
+    /svc/avanti => /#/io.l5d.consul/dc1/avanti-container;
   servers:
   - port: 4140
     ip: 0.0.0.0
